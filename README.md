@@ -98,7 +98,7 @@ app/
  
 ```bash
 # 1. Clone the repo
-git clone https://github.com/usuario/recetopolis-android.git
+git clone https://github.com/UrielJafet/Recetopolis-app.git
  
 # 2. Open in Android Studio
  
