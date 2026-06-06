@@ -94,3 +94,16 @@ app/
     └── UseCaseModule  
 ```
 ---
+## Getting Started
+ 
+```bash
+# 1. Clone the repo
+git clone https://github.com/usuario/recetopolis-android.git
+ 
+# 2. Open in Android Studio
+ 
+# 3. Set the base URL in Constants.kt
+const val BASE_URL = "http://YOUR_IP:4321/api/"
+ 
+# 4. Run the app on emulator or device
+```
