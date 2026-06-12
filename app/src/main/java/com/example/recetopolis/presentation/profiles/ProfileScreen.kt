@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.recetopolis.presentation.navigation.BottomBar
+import com.example.recetopolis.presentation.navigation.Routes
 
 @Composable
 fun ProfileScreen(
@@ -63,7 +64,8 @@ fun ProfileScreen(
                 .padding(padding)
                 .padding(24.dp),
             uiState = uiState,
-            onLogout = viewModel::logout
+            onLogout = viewModel::logout,
+            onNavigateToEdit = { navController.navigate(Routes.EditProfile.route) }
         )
     }
 }
@@ -72,7 +74,8 @@ fun ProfileScreen(
 private fun ProfileContent(
     modifier: Modifier,
     uiState: ProfileUiState,
-    onLogout: () -> Unit
+    onLogout: () -> Unit,
+    onNavigateToEdit: () -> Unit
 ) {
     Column(
         modifier = modifier,
@@ -133,7 +136,7 @@ private fun ProfileContent(
 
         // Botón editar
         Button(
-            onClick = { /* TODO: editar perfil */ },
+            onClick = onNavigateToEdit,
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.secondary

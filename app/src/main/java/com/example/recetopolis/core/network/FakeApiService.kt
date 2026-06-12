@@ -2,6 +2,7 @@ package com.example.recetopolis.core.network
 
 import com.example.recetopolis.data.remote.dto.*
 import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.milliseconds
 
 class FakeApiService {
 
@@ -92,7 +93,7 @@ class FakeApiService {
     // ========== AUTH ==========
 
     suspend fun login(request: LoginRequest): AuthResponse {
-        delay(800) // Simula red
+        delay(800.milliseconds) // Simula red
 
         val password = passwords[request.email]
         if (password == null || password != request.password) {
@@ -109,7 +110,7 @@ class FakeApiService {
     }
 
     suspend fun register(request: RegisterRequest): AuthResponse {
-        delay(800)
+        delay(800.milliseconds)
 
         if (users.any { it.email == request.email }) {
             throw Exception("Email already registered")
@@ -133,7 +134,7 @@ class FakeApiService {
     }
 
     suspend fun getProfile(token: String): UserDto {
-        delay(300)
+        delay(300.milliseconds)
         validateToken(token)
         return currentUser ?: throw Exception("No session")
     }
@@ -141,17 +142,17 @@ class FakeApiService {
     // ========== RECIPES ==========
 
     suspend fun getRecipes(): List<RecipeDto> {
-        delay(500)
+        delay(500.milliseconds)
         return recipes
     }
 
     suspend fun getRecipeById(id: String): RecipeDto {
-        delay(300)
+        delay(300.milliseconds)
         return recipes.find { it.id == id } ?: throw Exception("Recipe not found")
     }
 
     suspend fun searchRecipes(query: String?, category: String?, difficulty: String?): List<RecipeDto> {
-        delay(400)
+        delay(400.milliseconds)
         return recipes.filter { recipe ->
             val matchesQuery = query?.let {
                 recipe.title.contains(it, ignoreCase = true) ||
@@ -165,7 +166,7 @@ class FakeApiService {
     }
 
     suspend fun createRecipe(token: String, recipe: CreateRecipeRequest): RecipeDto {
-        delay(600)
+        delay(600.milliseconds)
         validateToken(token)
 
         val newRecipe = RecipeDto(
@@ -189,7 +190,7 @@ class FakeApiService {
     // ========== FAVORITES ==========
 
     suspend fun getFavorites(token: String): List<RecipeDto> {
-        delay(400)
+        delay(400.milliseconds)
         validateToken(token)
         val userId = currentUser?.id ?: return emptyList()
         val favIds = favorites[userId] ?: return emptyList()
@@ -197,14 +198,14 @@ class FakeApiService {
     }
 
     suspend fun addFavorite(token: String, recipeId: String) {
-        delay(300)
+        delay(300.milliseconds)
         validateToken(token)
         val userId = currentUser?.id ?: throw Exception("No user")
         favorites.getOrPut(userId) { mutableListOf() }.add(recipeId)
     }
 
     suspend fun removeFavorite(token: String, recipeId: String) {
-        delay(300)
+        delay(300.milliseconds)
         validateToken(token)
         val userId = currentUser?.id ?: throw Exception("No user")
         favorites[userId]?.remove(recipeId)
@@ -213,7 +214,7 @@ class FakeApiService {
     // ========== CATEGORIES ==========
 
     suspend fun getCategories(): List<CategoryDto> {
-        delay(200)
+        delay(200.milliseconds)
         return listOf(
             CategoryDto("1", "Mexicana", "🌮"),
             CategoryDto("2", "Italiana", "🍝"),
@@ -230,5 +231,33 @@ class FakeApiService {
             throw Exception("Invalid token")
         }
         currentToken = token
+    }
+
+    // ========== USER ==========
+
+    suspend fun updateProfile(token: String, username: String, bio: String?, avatar: String?): UserDto {
+        delay(600.milliseconds)
+        validateToken(token)
+
+        val user = currentUser ?: throw Exception("No user")
+        val updatedUser = user.copy(
+            username = username,
+            avatar = avatar ?: user.avatar
+        )
+
+        // Actualizar en lista
+        val index = users.indexOfFirst { it.id == user.id }
+        if (index != -1) {
+            users[index] = updatedUser
+        }
+        currentUser = updatedUser
+
+        return updatedUser
+    }
+
+    suspend fun getCurrentUser(token: String): UserDto {
+        delay(300.milliseconds)
+        validateToken(token)
+        return currentUser ?: throw Exception("No session")
     }
 }

@@ -9,6 +9,7 @@ import com.example.recetopolis.presentation.auth.register.RegisterScreen
 import com.example.recetopolis.presentation.favorites.FavoritesScreen
 import com.example.recetopolis.presentation.profiles.ProfileScreen
 import com.example.recetopolis.presentation.home.HomeScreen
+import com.example.recetopolis.presentation.profiles.edit.EditProfileScreen
 import com.example.recetopolis.presentation.recipes.RecipeDetailScreen
 
 @Composable
@@ -68,6 +69,12 @@ fun AppNavGraph(
                         popUpTo(0) { inclusive = true }
                     }
                 }
+            )
+        }
+
+        composable(Routes.EditProfile.route) {
+            EditProfileScreen(
+                onNavigateBack = { navController.navigateUp() }
             )
         }
 
